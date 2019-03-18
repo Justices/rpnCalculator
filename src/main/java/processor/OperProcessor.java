@@ -56,7 +56,7 @@ public class OperProcessor {
     }
 
     public boolean invalidInput(InputElement inputElement){
-        System.out.println("invalid input");
+        System.out.println("invalid input :" + inputElement.getInput());
         return false;
     }
 }

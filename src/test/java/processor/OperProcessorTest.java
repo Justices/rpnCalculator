@@ -63,11 +63,9 @@ public class OperProcessorTest {
 
     @Test
     public void test7() {
-        assertTrue("1 2 3 4 5".equals(operProcessor.process("12 3* 5+ * * 6 5")));
+        assertTrue("1 2 3 4 5".equals(operProcessor.process("1 2 3 4 5")));
         assertTrue("120".equals(operProcessor.process("* * * *")));
     }
-
-
 
 
     @After
