@@ -5,4 +5,5 @@ calcutor.impl.DivisionCalculator
 calcutor.impl.UndoCalculator
 calcutor.impl.ClearCalculator
 calcutor.impl.SqrtCalculator
+calcutor.impl.ElementCalculator
 

@@ -6,15 +6,19 @@ import common.ErrorCode;
 import common.ResultStack;
 import context.CalculatorContext;
 import domain.InputElement;
+import domain.PreStep;
 import exception.CalculatorException;
+import utils.CommonUtils;
+
+import java.util.Stack;
 
 public class OperProcessor {
     private ResultStack stack;
-    private CalculatorContext context;
+    private CalculatorHandler calculatorHandler;
 
     public OperProcessor(){
         this.stack = new ResultStack();
-        context = CalculatorContext.getInstance();
+        calculatorHandler = new CalculatorHandler();
     }
 
     public String process(String inputLine){
@@ -32,25 +36,14 @@ public class OperProcessor {
         return stack.outputString();
     }
 
-    public boolean pushElement(InputElement element){
-        stack.pushElement(element);
-        return true;
-    }
-
     public boolean calculator(InputElement element){
         try{
-            String input = element.getInput();
-            Calculator calculator = context.getCalc(input);
+            Calculator calculator = calculatorHandler.getProxy(element);
             calculator.calculator(stack, element);
             return true;
-        }catch (CalculatorException exception){
-            ErrorCode errorCode = exception.getErrorCode();
-            if(errorCode.compareTo(ErrorCode.OPERATOR_NOT_SUPPORT)==0){
-                System.out.println(exception.getMessage());
-                stack.insucientErrorHandler();
-                return false;
-            }
-
+        }catch (Exception exception ){
+            stack.insucientErrorHandler();
+            CommonUtils.parseException(exception);
         }
         return false;
     }

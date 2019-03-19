@@ -17,7 +17,7 @@ public class DivisionCalculator implements Calculator {
         BigDecimal first = stack.getElement(inputElement);
         BigDecimal second = stack.getElement(inputElement);
         if(first.compareTo(BigDecimal.ZERO) ==0 ){
-            throw new CalculatorException(ErrorCode.INVALID_INPUT, "input parameter error");
+            throw new CalculatorException(ErrorCode.OPERATOR_NOT_SUPPORT, "operator " + inputElement.getInput() + " (position "+inputElement.getPos()+"):insucient parameter");
         }
         BigDecimal result = second.divide(first).setScale(15, RoundingMode.HALF_UP);
         stack.pushResult(result);

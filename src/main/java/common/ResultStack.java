@@ -1,7 +1,6 @@
 package common;
 
 import domain.InputElement;
-import domain.PreStep;
 import exception.CalculatorException;
 import utils.CommonUtils;
 
@@ -24,15 +23,11 @@ public class ResultStack {
     public void pushResult(BigDecimal element){
         String input = element.setScale(15, RoundingMode.HALF_UP).toPlainString();
         stack.push(input);
-        PreStep preStep = new PreStep(true, (Stack) stack.clone());
-        stepProcessor.savepoint(preStep);
     }
 
     public void pushElement(InputElement inputElement) {
         String input = inputElement.getInput();
         stack.push(input);
-        PreStep preStep = new PreStep(false, (Stack) stack.clone());
-        stepProcessor.savepoint(preStep);
     }
 
    public BigDecimal getElement(InputElement element){
@@ -46,21 +41,26 @@ public class ResultStack {
         stack.clear();
    }
 
+   public void backup(InputElement inputElement){
+       if(OperatorEnum.isUndo(inputElement.getInput())){
+           return ;
+       }
+       stepProcessor.savepoint((Stack) stack.clone());
+   }
+
    public void undo(InputElement element){
         Stack preStack = stepProcessor.undo();
         if(preStack ==null){
-            throw new CalculatorException(ErrorCode.OPERATOR_NOT_SUPPORT, "operator " + element.getInput() + " (position "+element.getPos()+"):insucient parameter");
+            System.out.println("operator " + element.getInput() + " (position "+element.getPos()+"):insucient parameter");
+            return ;
         }
         this.stack = preStack;
    }
 
     public void insucientErrorHandler(){
-        List<PreStep> stackList = stepProcessor.stackList;
-        PreStep lastElement = stackList.get(stackList.size()-1);
-        Stack<String>  lastStack = lastElement.getPreStack();
-        int size = lastStack.size();
-        String resetValue = lastStack.get(size-1);
-        stack.push(resetValue);
+        List<Stack> stackList = stepProcessor.stackList;
+        Stack<String> lastStack = stackList.get(stackList.size()-1);
+        stack = lastStack;
     }
 
 
@@ -76,22 +76,16 @@ public class ResultStack {
    }
 
    private class StepProcessor{
-        private List<PreStep> stackList = new ArrayList();
-        public void savepoint(PreStep preStep){
-            stackList.add(preStep);
+        private List<Stack> stackList = new ArrayList();
+        public void savepoint(Stack<String> stack){
+            stackList.add(stack);
         }
 
         public Stack undo(){
             if(stackList.isEmpty()){
                 return null;
             }
-            PreStep lastElement = stackList.remove(stackList.size()-1);
-            Stack<String> stack = lastElement.getPreStack();
-            if(lastElement.isResult()){
-                lastElement = stackList.remove(stackList.size()-1);
-                return lastElement.getPreStack();
-            }
-            stack.pop();
+            Stack stack = stackList.remove(stackList.size()-1);
             return  stack;
         }
 

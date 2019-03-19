@@ -6,11 +6,6 @@ import processor.OperProcessor;
 import utils.CommonUtils;
 
 public enum ElementType {
-    NUMBER(){
-        public boolean processElement(OperProcessor operProcessor, InputElement element) {
-            return operProcessor.pushElement(element);
-        }
-    },
     OPERATOR(){
         public boolean processElement(OperProcessor operProcessor, InputElement element) {
             return operProcessor.calculator(element);
@@ -31,7 +26,7 @@ public enum ElementType {
 
     public static ElementType getElementType(String input){
         if(CommonUtils.isNumeric(input)){
-            return NUMBER;
+            return OPERATOR;
         }
 
         OperatorEnum operatorEnum = OperatorEnum.parse(input);
@@ -44,6 +39,5 @@ public enum ElementType {
         }
 
         return INVALID_INPUT;
-
     }
 }
