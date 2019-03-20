@@ -1,2 +1,3 @@
 # rpnCalculator
-execute the command sh start.sh
+启动程序： sh startup.sh
+
