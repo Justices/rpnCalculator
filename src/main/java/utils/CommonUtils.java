@@ -33,6 +33,7 @@ public class CommonUtils {
                 Throwable rootCause = invokeException.getTargetException();
                 if(rootCause instanceof CalculatorException){
                     System.out.println(rootCause.getMessage());
+                    return ;
                 }
             }
         }

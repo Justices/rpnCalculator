@@ -23,5 +23,6 @@ public class CalculatorContextTest {
         Assert.assertTrue(context.getCalc("sqrt") instanceof SqrtCalculator);
         Assert.assertTrue(context.getCalc("undo") instanceof UndoCalculator);
         Assert.assertTrue(context.getCalc("clear") instanceof ClearCalculator);
+        Assert.assertTrue(context.getCalc("4.5") instanceof ElementCalculator);
     }
 }

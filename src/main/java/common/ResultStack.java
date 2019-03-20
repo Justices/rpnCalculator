@@ -50,16 +50,14 @@ public class ResultStack {
 
    public void undo(InputElement element){
         Stack preStack = stepProcessor.undo();
-        if(preStack ==null){
+        if(preStack.isEmpty()){
             System.out.println("operator " + element.getInput() + " (position "+element.getPos()+"):insucient parameter");
-            return ;
         }
         this.stack = preStack;
    }
 
     public void insucientErrorHandler(){
-        List<Stack> stackList = stepProcessor.stackList;
-        Stack<String> lastStack = stackList.get(stackList.size()-1);
+        Stack<String> lastStack = stepProcessor.undo();
         stack = lastStack;
     }
 
@@ -83,7 +81,7 @@ public class ResultStack {
 
         public Stack undo(){
             if(stackList.isEmpty()){
-                return null;
+                return new Stack<String>();
             }
             Stack stack = stackList.remove(stackList.size()-1);
             return  stack;
